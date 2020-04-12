@@ -24,19 +24,11 @@ os.environ["AWS_ACCESS_KEY_ID"] = config["CLUSTER"].get("AWS_ACCESS_KEY_ID")
 os.environ["AWS_SECRET_ACCESS_KEY"] = config["CLUSTER"].get("AWS_SECRET_ACCESS_KEY")
 
 
-def create_local_spark_session() -> SparkSession:
-    return SparkSession \
-        .builder \
-        .master("local") \
-        .appName("Sparkify ETL") \
-        .getOrCreate()
-
-
 def create_spark_session() -> SparkSession:
     return SparkSession \
         .builder \
         .appName("Sparkify ETL") \
-        .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:2.7.0") \
+        .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:3.2.1") \
         .getOrCreate()
 
 
@@ -194,13 +186,9 @@ def process_log_data(spark: SparkSession, input_data: str, output_data: str) -> 
 
 def main() -> None:
     spark = create_spark_session()
-    # spark = create_local_spark_session()
 
     input_data = "s3a://udacity-dend/"
-    output_data = "s3a://dmt-dend-sparkify/output/"
-
-    # input_data = "/home/glitch/udacity/project-4-data-lake/"
-    # output_data = "/home/glitch/udacity/project-4-data-lake/output/"
+    output_data = "s3a://sparkify-bucket-output/"
 
     process_song_data(spark, input_data, output_data)
     process_log_data(spark, input_data, output_data)
