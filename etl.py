@@ -56,7 +56,7 @@ def process_song_data(spark: SparkSession, input_data: str, output_data: str) ->
         "artist_id",
         "year",
         "duration"
-    )
+    ).drop_duplicates()
 
     # write songs table to parquet files partitioned by year and artist
     songs_table.write.parquet(
@@ -106,7 +106,7 @@ def process_log_data(spark: SparkSession, input_data: str, output_data: str) -> 
         col("lastName").alias("last_name"),
         "gender",
         "level"
-    ).drop_duplicates()
+    ).drop_duplicates(["user_id"])
 
     # write users table to parquet files
     users_table.write.parquet(
@@ -167,7 +167,7 @@ def process_log_data(spark: SparkSession, input_data: str, output_data: str) -> 
             col("name").alias("artist_name"),
             "duration"
         )
-    )
+    ).drop_duplicates()
 
     songplays_table = (
         df
