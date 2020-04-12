@@ -25,6 +25,8 @@ os.environ["AWS_SECRET_ACCESS_KEY"] = config["CLUSTER"].get("AWS_SECRET_ACCESS_K
 
 
 def create_spark_session() -> SparkSession:
+    """Creates a Spark Session"""
+
     return SparkSession \
         .builder \
         .appName("Sparkify ETL") \
@@ -33,6 +35,14 @@ def create_spark_session() -> SparkSession:
 
 
 def process_song_data(spark: SparkSession, input_data: str, output_data: str) -> None:
+    """
+    Process song data from S3, and generates songs and artists data
+
+    :param spark: SparkSession object
+    :param input_data: S3 URI for song data input
+    :param output_data: S3 URI for songs and artists output
+    """
+
     # get filepath to song data file
     song_data = os.path.join(input_data, "song-data", "*", "*", "*", "*.json")
 
@@ -72,6 +82,14 @@ def process_song_data(spark: SparkSession, input_data: str, output_data: str) ->
 
 
 def process_log_data(spark: SparkSession, input_data: str, output_data: str) -> None:
+    """
+    Process log data from user events, and generates users, time and songplays data
+
+    :param spark: SparkSession object
+    :param input_data: S3 URI for song data input
+    :param output_data: S3 URI for songs and artists output
+    """
+
     # get filepath to log data file
     log_data = os.path.join(input_data, "log-data", "*", "*", "*.json")
 
@@ -185,6 +203,8 @@ def process_log_data(spark: SparkSession, input_data: str, output_data: str) -> 
 
 
 def main() -> None:
+    """Runs Sparkify ETL Job"""
+
     spark = create_spark_session()
 
     input_data = "s3a://udacity-dend/"
